@@ -3,12 +3,14 @@
  */
 package com.strandls.observation.es.util;
 
+import java.util.List;
+
+import javax.inject.Inject;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import javax.inject.Inject;
-
 import com.strandls.esmodule.controllers.EsServicesApi;
 import com.strandls.esmodule.pojo.MapDocument;
 import com.strandls.esmodule.pojo.MapQueryResponse;
@@ -33,10 +35,10 @@ public class ESUpdate {
 	public void pushToElastic(String observationId) {
 		try {
 			System.out.println("Observation getting pushed to elastic, ID:" + observationId);
-			ObservationESDocument result = constructESDocument.getESDocumentStub(observationId);
+			List<ObservationESDocument> result = constructESDocument.getESDocumentStub(observationId);
 //			SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS");
 //			om.setDateFormat(df);
-			String resultString = om.writeValueAsString(result);
+			String resultString = om.writeValueAsString(result.get(0));
 			MapDocument doc = new MapDocument();
 			doc.setDocument(resultString);
 			MapQueryResponse response = esService.create(ObservationIndex.index.getValue(),
@@ -54,10 +56,10 @@ public class ESUpdate {
 			System.out.println();
 			System.out.println("------started----------");
 			System.out.println("Observation getting UPDATED to elastic, ID:" + observationId);
-			ObservationESDocument result = constructESDocument.getESDocumentStub(observationId);
+			List<ObservationESDocument> result = constructESDocument.getESDocumentStub(observationId);
 //			SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS");
 //			om.setDateFormat(df);
-			String resultString = om.writeValueAsString(result);
+			String resultString = om.writeValueAsString(result.get(0));
 			MapDocument doc = new MapDocument();
 			doc.setDocument(resultString);
 			MapQueryResponse response = esService.create(ObservationIndex.index.getValue(),
